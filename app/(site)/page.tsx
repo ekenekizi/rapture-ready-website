@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { Reveal } from "@/components/motion/reveal";
 import {
   Container,
   Eyebrow,
@@ -33,53 +34,70 @@ export default function HomePage() {
         <Container>
           <div className="grid items-center gap-10 md:grid-cols-2 lg:gap-16">
             <div>
-              <Eyebrow>Endtime Watch — A Ministry of the Word</Eyebrow>
+              <Reveal trigger="load">
+                <Eyebrow>Endtime Watch — A Ministry of the Word</Eyebrow>
+              </Reveal>
 
-              <h1 className="mt-7 font-serif text-6xl leading-[1.02] tracking-tight lg:text-8xl">
-                Watch.
-                <br />
-                Discern.
-                <br />
-                <em className="text-gold">Be Ready.</em>
-              </h1>
+              <Reveal trigger="load" delay={0.08}>
+                <h1 className="mt-7 font-serif text-6xl leading-[1.02] tracking-tight lg:text-8xl">
+                  Watch.
+                  <br />
+                  Discern.
+                  <br />
+                  <em className="text-gold">Be Ready.</em>
+                </h1>
+              </Reveal>
 
-              <p className="mt-7 max-w-lg text-sm leading-7 text-muted">
-                Helping believers understand the times, return to biblical
-                truth, and prepare their hearts for the coming of Jesus Christ.
-              </p>
-
-              <div className="mt-8 flex flex-wrap items-center gap-6">
-                <ButtonLink href="/library">Explore the Library</ButtonLink>
-                <TextLink href="#mission">Why We Watch</TextLink>
-              </div>
-
-              <blockquote className="mt-10 max-w-lg border-t border-border pt-5">
-                <p className="font-serif text-xl leading-relaxed">
-                  “Watch therefore: for ye know not what hour your Lord doth
-                  come.”
+              <Reveal trigger="load" delay={0.16}>
+                <p className="mt-7 max-w-lg text-sm leading-7 text-muted">
+                  Helping believers understand the times, return to biblical
+                  truth, and prepare their hearts for the coming of Jesus
+                  Christ.
                 </p>
+              </Reveal>
 
-                <cite className="mt-3 block text-[10px] tracking-widest text-muted not-italic">
-                  MATTHEW 24:42
-                </cite>
-              </blockquote>
+              <Reveal trigger="load" delay={0.24}>
+                <div className="mt-8 flex flex-wrap items-center gap-6">
+                  <ButtonLink href="/library">Explore the Library</ButtonLink>
+
+                  <TextLink href="#mission">Why We Watch</TextLink>
+                </div>
+              </Reveal>
+
+              <Reveal delay={0.1}>
+                <blockquote className="mt-10 max-w-lg border-t border-border pt-5">
+                  <p className="font-serif text-xl leading-relaxed">
+                    “Watch therefore: for ye know not what hour your Lord doth
+                    come.”
+                  </p>
+
+                  <cite className="mt-3 block text-[10px] tracking-widest text-muted not-italic">
+                    MATTHEW 24:42
+                  </cite>
+                </blockquote>
+              </Reveal>
             </div>
 
-            <figure className="mx-auto w-full max-w-md lg:max-w-lg">
-              <Image
-                src="/images/watchtower.png"
-                alt="A watchman with a trumpet overlooking the dawn from a stone watchtower."
-                width={1122}
-                height={1402}
-                preload
-                sizes="(max-width: 767px) 90vw, 45vw"
-                className="h-auto w-full mix-blend-multiply"
-              />
+            <Reveal
+              delay={0.15}
+              className="mx-auto w-full max-w-md lg:max-w-lg"
+            >
+              <figure>
+                <Image
+                  src="/images/watchtower.png"
+                  alt="A watchman with a trumpet overlooking the dawn from a stone watchtower."
+                  width={1122}
+                  height={1402}
+                  preload
+                  sizes="(max-width: 767px) 90vw, 45vw"
+                  className="h-auto w-full mix-blend-multiply"
+                />
 
-              <figcaption className="mt-4 text-center text-[8px] tracking-[0.2em] text-muted">
-                WATCHFUL IN HOPE · GROUNDED IN THE WORD
-              </figcaption>
-            </figure>
+                <figcaption className="mt-4 text-center text-[8px] tracking-[0.2em] text-muted">
+                  WATCHFUL IN HOPE · GROUNDED IN THE WORD
+                </figcaption>
+              </figure>
+            </Reveal>
           </div>
 
           <div className="mt-10 flex flex-wrap justify-between gap-4 border-t border-border pt-6 text-[9px] tracking-[0.15em] text-muted">
@@ -119,7 +137,11 @@ export default function HomePage() {
 
           <div className="mt-12 grid gap-8 sm:grid-cols-3">
             {pillars.map((pillar, index) => (
-              <div key={pillar.title} className="border-t border-border pt-6">
+              <Reveal
+                key={pillar.title}
+                delay={index * 0.08}
+                className="border-t border-border pt-6"
+              >
                 <span className="font-serif text-2xl text-gold">
                   0{index + 1} /
                 </span>
@@ -131,7 +153,7 @@ export default function HomePage() {
                 <p className="mt-3 text-sm leading-7 text-muted">
                   {pillar.description}
                 </p>
-              </div>
+              </Reveal>
             ))}
           </div>
         </Container>

@@ -1,6 +1,9 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 
+import { AnimatedLink } from "@/components/motion/animated-link";
+import { Reveal } from "@/components/motion/reveal";
+
 type ContainerProps = {
   children: ReactNode;
   className?: string;
@@ -39,7 +42,7 @@ type ButtonLinkProps = {
 
 export function ButtonLink({ href, children, light = false }: ButtonLinkProps) {
   return (
-    <Link
+    <AnimatedLink
       href={href}
       className={`inline-flex min-h-12 items-center justify-center gap-6 rounded-sm px-6 py-3 text-xs font-medium transition-colors ${
         light
@@ -49,7 +52,7 @@ export function ButtonLink({ href, children, light = false }: ButtonLinkProps) {
     >
       {children}
       <span aria-hidden="true">↗</span>
-    </Link>
+    </AnimatedLink>
   );
 }
 
@@ -84,7 +87,7 @@ export function SectionHeading({
   as: Heading = "h2",
 }: SectionHeadingProps) {
   return (
-    <div>
+    <Reveal>
       <Eyebrow>{eyebrow}</Eyebrow>
 
       <Heading className="mt-4 font-serif text-4xl leading-tight tracking-tight md:text-6xl">
@@ -96,6 +99,6 @@ export function SectionHeading({
           {description}
         </p>
       )}
-    </div>
+    </Reveal>
   );
 }
