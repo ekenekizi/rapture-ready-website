@@ -1,0 +1,74 @@
+[
+  {
+    "id": 10845322,
+    "title": "Taking the Word outside",
+    "category": "Evangelism",
+    "src": "/images/gallery/gallery-photo-10845322.jpg",
+    "alt": "A man speaking into a microphone while holding a Bible outdoors",
+    "description": "A visual preview of how moments from street evangelism will be presented.",
+    "credit": "Pexels",
+    "source": "https://www.pexels.com/photo/a-man-talking-on-a-microphone-while-holding-a-bible-10845322/",
+    "portrait": true,
+    "isSample": true
+  },
+  {
+    "id": 30477322,
+    "title": "Gathered in fellowship",
+    "category": "Fellowship",
+    "src": "/images/gallery/gallery-photo-30477322.jpg",
+    "alt": "A church community gathered outdoors for fellowship",
+    "description": "A space for the conversations and connections that grow around shared faith.",
+    "credit": "Daniel & Hannah Snipes / Pexels",
+    "source": "https://www.pexels.com/photo/joyful-church-community-outdoor-gathering-30477322/",
+    "portrait": false,
+    "isSample": true
+  },
+  {
+    "id": 6860826,
+    "title": "Opening the Scriptures together",
+    "category": "Fellowship",
+    "src": "/images/gallery/gallery-photo-6860826.jpg",
+    "alt": "Three people studying and discussing the Bible in a living room",
+    "description": "A visual preview of shared study, listening, and growing in biblical understanding.",
+    "credit": "Tima Miroshnichenko / Pexels",
+    "source": "https://www.pexels.com/photo/a-people-doing-bible-study-6860826/",
+    "portrait": false,
+    "isSample": true
+  },
+  {
+    "id": 35843613,
+    "title": "Proclaiming the message",
+    "category": "Evangelism",
+    "src": "/images/gallery/gallery-photo-35843613.jpg",
+    "alt": "An African preacher delivering a sermon outdoors",
+    "description": "Sample photography showing how ministry teaching and proclamation can be documented.",
+    "credit": "Pexels",
+    "source": "https://www.pexels.com/photo/african-preacher-passionately-delivering-a-sermon-35843613/",
+    "portrait": true,
+    "isSample": true
+  },
+  {
+    "id": 6646855,
+    "title": "Serving with willing hands",
+    "category": "Community outreach",
+    "src": "/images/gallery/gallery-photo-6646855.jpg",
+    "alt": "Volunteers working together during a community food distribution",
+    "description": "A visual preview of practical service and care within the community.",
+    "credit": "Pexels",
+    "source": "https://www.pexels.com/photo/food-love-people-africa-6646855/",
+    "portrait": false,
+    "isSample": true
+  },
+  {
+    "id": 39008709,
+    "title": "A community grounded in faith",
+    "category": "Fellowship",
+    "src": "/images/gallery/gallery-photo-39008709.jpg",
+    "alt": "People seated together during a church gathering",
+    "description": "A place for moments of fellowship, encouragement, and hearing the Word.",
+    "credit": "Caleb Oquendo / Pexels",
+    "source": "https://www.pexels.com/photo/community-gathering-in-a-church-setting-39008709/",
+    "portrait": false,
+    "isSample": true
+  }
+]

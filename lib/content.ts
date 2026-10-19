@@ -1,3 +1,5 @@
+import type { TeachingImage } from "@/sanity/image-types";
+
 export type Teaching = {
   slug: string;
   title: string;
@@ -5,6 +7,7 @@ export type Teaching = {
   excerpt: string;
   scripture: string;
   minutes: number;
+  coverImage?: TeachingImage | null;
 };
 
 export const teachings: Teaching[] = [
@@ -61,4 +64,5 @@ export const navigation = [
   { label: "About", href: "/about" },
   { label: "Teachings", href: "/teachings" },
   { label: "Library", href: "/library" },
+  { label: "Gallery", href: "/gallery" },
 ];

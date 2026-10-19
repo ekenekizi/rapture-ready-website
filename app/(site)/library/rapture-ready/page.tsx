@@ -7,6 +7,9 @@ export const metadata: Metadata = {
   title: "The Trumpet Is Blowing",
 };
 
+import { ContinueReadingLink } from "@/components/reader/continue-reading-link";
+import { readerBook, sectionSummaries } from "@/lib/books/rapture-ready";
+
 export default function BookPage() {
   return (
     <main id="main-content">
@@ -42,9 +45,11 @@ export default function BookPage() {
               {book.chapters} chapters · Approximately {book.minutes} min read
             </p>
 
-            <div className="mt-8 border border-border bg-paper p-5 text-sm leading-7 text-muted">
-              The online reader will be connected in the reader implementation
-              batch.
+            <div className="mt-8">
+              <ContinueReadingLink
+                sections={sectionSummaries}
+                startSectionId={readerBook.startSectionId}
+              />
             </div>
 
             <h2 className="mt-10 font-serif text-3xl">About this book</h2>

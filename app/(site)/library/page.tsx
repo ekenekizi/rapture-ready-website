@@ -1,12 +1,10 @@
 import Image from "next/image";
 import type { Metadata } from "next";
 import { book } from "@/lib/content";
-import {
-  Container,
-  SectionHeading,
-  Eyebrow,
-  ButtonLink,
-} from "@/components/ui";
+import { Container, SectionHeading, Eyebrow, TextLink } from "@/components/ui";
+
+import { ContinueReadingLink } from "@/components/reader/continue-reading-link";
+import { readerBook, sectionSummaries } from "@/lib/books/rapture-ready";
 
 export const metadata: Metadata = {
   title: "Library",
@@ -17,6 +15,7 @@ export default function LibraryPage() {
     <main id="main-content">
       <Container className="py-16 md:py-24">
         <SectionHeading
+          as="h1"
           eyebrow="Read. Study. Prepare."
           title="The Endtime Watch Library"
           description="Books and biblical teachings for believers who desire to understand the times and remain spiritually prepared."
@@ -51,8 +50,13 @@ export default function LibraryPage() {
               {book.chapters} chapters · Approximately {book.minutes} min read
             </p>
 
-            <div className="mt-8">
-              <ButtonLink href={`/library/${book.slug}`}>View Book</ButtonLink>
+            <div className="mt-8 flex flex-wrap items-start gap-6">
+              <ContinueReadingLink
+                sections={sectionSummaries}
+                startSectionId={readerBook.startSectionId}
+              />
+
+              <TextLink href={`/library/${book.slug}`}>View Book</TextLink>
             </div>
           </div>
         </section>

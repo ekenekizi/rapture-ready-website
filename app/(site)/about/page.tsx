@@ -10,6 +10,7 @@ export default function AboutPage() {
     <main id="main-content">
       <Container className="py-16 md:py-24">
         <SectionHeading
+          as="h1"
           eyebrow="About Endtime Watch"
           title="Publishing the message. Sounding the warning."
           description="A ministry rooted in Scripture, devoted to discernment, and committed to spiritual readiness."

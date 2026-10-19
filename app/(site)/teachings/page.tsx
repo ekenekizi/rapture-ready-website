@@ -1,32 +1,40 @@
 import type { Metadata } from "next";
 import { Container, SectionHeading } from "@/components/ui";
 import { TeachingCard } from "@/components/teaching-card";
-import { teachings } from "@/lib/content";
+import { getTeachings } from "@/sanity/lib/teachings";
 
 export const metadata: Metadata = {
   title: "Teachings",
 };
 
-export default function TeachingsPage() {
+export default async function TeachingsPage() {
+  const teachings = await getTeachings();
+
   return (
     <main id="main-content">
       <Container className="py-16 md:py-24">
         <SectionHeading
+          as="h1"
           eyebrow="Biblical perspectives"
           title="Understand the Times"
           description="Read, reflect, and grow in biblical discernment through Scripture-centered teachings."
         />
 
-        <p className="mt-5 text-xs text-muted">
-          Illustrative previews. Published ministry teachings will come from
-          Sanity.
-        </p>
+        {teachings.length > 0 ? (
+          <div className="mt-12 grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
+            {teachings.map((teaching) => (
+              <TeachingCard key={teaching._id} teaching={teaching} />
+            ))}
+          </div>
+        ) : (
+          <div className="mt-12 border-t border-border pt-8">
+            <p className="font-serif text-3xl">Teachings are being prepared.</p>
 
-        <div className="mt-12 grid gap-10 sm:grid-cols-2">
-          {teachings.map((teaching) => (
-            <TeachingCard key={teaching.slug} teaching={teaching} />
-          ))}
-        </div>
+            <p className="mt-4 text-sm leading-7 text-muted">
+              Published biblical teachings will appear here.
+            </p>
+          </div>
+        )}
       </Container>
     </main>
   );

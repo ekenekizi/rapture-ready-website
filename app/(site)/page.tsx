@@ -1,4 +1,6 @@
 import Image from "next/image";
+import Link from "next/link";
+import { TeachingPhoto } from "@/components/teaching-photo";
 import { Reveal } from "@/components/motion/reveal";
 import {
   Container,
@@ -8,7 +10,11 @@ import {
   SectionHeading,
 } from "@/components/ui";
 import { TeachingCard } from "@/components/teaching-card";
-import { book, teachings } from "@/lib/content";
+import { book } from "@/lib/content";
+import { getTeachings } from "@/sanity/lib/teachings";
+import { GalleryPreview } from "@/components/gallery-preview";
+import { galleryPhotos } from "@/lib/gallery";
+import { ShareTeachingButton } from "@/components/share-teaching-button";
 
 const pillars = [
   {
@@ -26,7 +32,10 @@ const pillars = [
   },
 ];
 
-export default function HomePage() {
+export default async function HomePage() {
+  const teachings = await getTeachings();
+  const featuredTeaching = teachings[0];
+
   return (
     <main id="main-content">
       {/* Hero */}
@@ -246,36 +255,69 @@ export default function HomePage() {
               eyebrow="Biblical perspectives"
               title="Understand the Times"
             />
+
             <TextLink href="/teachings">Explore Teachings</TextLink>
           </div>
 
-          <div className="mt-10 grid gap-10 md:grid-cols-2">
-            <article className="bg-paper p-7 md:p-10">
-              <Eyebrow>Featured teaching · Rapture</Eyebrow>
+          {featuredTeaching ? (
+            <div className="mt-10 grid gap-10 md:grid-cols-2">
+              <article className="bg-paper p-7 md:p-10">
+                {featuredTeaching.coverImage?.asset?._ref && (
+                  <Link
+                    href={`/teachings/${featuredTeaching.slug}`}
+                    aria-label={`Read ${featuredTeaching.title}`}
+                    className="group -mx-7 -mt-7 mb-8 block md:-mx-10 md:-mt-10"
+                  >
+                    <TeachingPhoto
+                      image={featuredTeaching.coverImage}
+                      variant="feature"
+                    />
+                  </Link>
+                )}
+                <Eyebrow>
+                  Featured teaching · {featuredTeaching.category}
+                </Eyebrow>
 
-              <h3 className="mt-6 font-serif text-4xl">{teachings[0].title}</h3>
+                <h3 className="mt-6 font-serif text-4xl">
+                  {featuredTeaching.title}
+                </h3>
 
-              <p className="mt-5 text-sm leading-8 text-muted">
-                {teachings[0].excerpt}
-              </p>
+                <p className="mt-5 text-sm leading-8 text-muted">
+                  {featuredTeaching.excerpt}
+                </p>
 
-              <p className="mt-6 text-xs text-muted">
-                {teachings[0].scripture} · {teachings[0].minutes} min read
-              </p>
+                <p className="mt-6 text-xs text-muted">
+                  {featuredTeaching.scripture} · {featuredTeaching.minutes} min
+                  read
+                </p>
 
-              <div className="mt-6">
-                <TextLink href={`/teachings/${teachings[0].slug}`}>
-                  Read Teaching
-                </TextLink>
+                <div className="mt-6 flex flex-wrap items-center gap-5">
+                  <TextLink href={`/teachings/${featuredTeaching.slug}`}>
+                    Read Teaching
+                  </TextLink>
+                  <ShareTeachingButton
+                    title={featuredTeaching.title}
+                    slug={featuredTeaching.slug}
+                    excerpt={featuredTeaching.excerpt}
+                  />
+                </div>
+              </article>
+
+              <div className="space-y-8">
+                {teachings.slice(1, 3).map((teaching) => (
+                  <TeachingCard
+                    key={teaching._id}
+                    teaching={teaching}
+                    compact
+                  />
+                ))}
               </div>
-            </article>
-
-            <div className="space-y-8">
-              {teachings.slice(1, 3).map((teaching) => (
-                <TeachingCard key={teaching.slug} teaching={teaching} />
-              ))}
             </div>
-          </div>
+          ) : (
+            <p className="mt-8 text-sm text-muted">
+              Biblical teachings are being prepared.
+            </p>
+          )}
         </Container>
       </section>
 
@@ -349,16 +391,17 @@ export default function HomePage() {
         <Container>
           <SectionHeading eyebrow="From the journal" title="Latest Teachings" />
 
-          <div className="mt-10 grid gap-10 md:grid-cols-3">
-            {teachings.slice(1).map((teaching) => (
-              <TeachingCard key={teaching.slug} teaching={teaching} />
-            ))}
-          </div>
-
-          <p className="mt-8 text-xs text-muted">
-            Teaching previews are illustrative while ministry content is being
-            prepared.
-          </p>
+          {teachings.length > 0 ? (
+            <div className="mt-10 grid gap-10 md:grid-cols-3">
+              {teachings.slice(0, 3).map((teaching) => (
+                <TeachingCard key={teaching._id} teaching={teaching} />
+              ))}
+            </div>
+          ) : (
+            <p className="mt-8 text-sm text-muted">
+              Published teachings will appear here.
+            </p>
+          )}
         </Container>
       </section>
 
@@ -389,6 +432,8 @@ export default function HomePage() {
       </section>
 
       {/* Final call to action */}
+      <GalleryPreview photos={galleryPhotos} />
+
       <section className="bg-navy px-6 py-20 text-center text-ivory">
         <Eyebrow light>A call to readiness</Eyebrow>
 
