@@ -1,0 +1,118 @@
+/* Approved mobile glass dock and ministry social profiles. */
+
+.mobile-glass-nav{display:none}
+
+@media(max-width:1023px){
+ .mobile-glass-nav{position:fixed;
+  z-index:55;
+  left:50%;
+  bottom:calc(14px + env(safe-area-inset-bottom,0px));
+  transform:translateX(-50%);
+  display:grid;
+  grid-template-columns:repeat(5,minmax(0,1fr));
+  gap:3px;
+  width:calc(100% - 28px);
+  max-width:440px;
+  padding:7px;
+  border:1px solid rgba(255,255,255,.42);
+  border-radius:999px;
+  background:linear-gradient(145deg,rgba(105,125,146,.38),rgba(16,28,44,.64) 46%,rgba(11,22,40,.76));
+  -webkit-backdrop-filter:blur(28px) saturate(175%);
+  backdrop-filter:blur(28px) saturate(175%);
+  box-shadow:0 14px 38px -8px rgba(11,22,40,.38),0 3px 10px rgba(11,22,40,.10),inset 0 1px 1px rgba(255,255,255,.36),inset 0 -1px 1px rgba(255,255,255,.08);
+  isolation:isolate}
+
+ .mobile-glass-nav::before{content:"";
+  position:absolute;
+  inset:1px;
+  border-radius:inherit;
+  background:linear-gradient(115deg,rgba(255,255,255,.13),transparent 35%,transparent 72%,rgba(255,255,255,.05));
+  pointer-events:none;
+  z-index:-1}
+
+ .mobile-glass-nav a{position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height:46px;
+  min-width:0;
+  padding:0 2px;
+  border:1px solid transparent;
+  border-radius:999px;
+  color:#fff;
+  font:500 10.5px/1.2 var(--font-dm-sans),Arial,sans-serif;
+  text-shadow:0 1px 3px rgba(0,0,0,.35);
+  text-align:center;
+  white-space:nowrap;
+  transition:background .2s,color .2s,border-color .2s,box-shadow .2s}
+
+ .mobile-glass-nav a.is-active{color:#fff0cf;
+  background:linear-gradient(155deg,rgba(255,255,255,.25),rgba(255,255,255,.07));
+  border-color:rgba(236,212,165,.56);
+  box-shadow:0 3px 9px rgba(0,0,0,.12),inset 0 1px 1px rgba(255,255,255,.34),inset 0 -1px 0 rgba(198,161,91,.16);
+  font-weight:700}
+
+ .mobile-glass-nav a.is-active::after{content:"";
+  position:absolute;
+  bottom:5px;
+  left:calc(50% - 7px);
+  width:14px;
+  height:2px;
+  border-radius:2px;
+  background:#e5c58d;
+  box-shadow:0 0 5px rgba(229,197,141,.22)}
+
+ .mobile-glass-nav a:hover{background-color:rgba(255,255,255,.09)}
+
+ .mobile-glass-nav a:focus-visible{outline:2px solid var(--color-gold);
+  outline-offset:1px}
+
+ .site-footer{padding-bottom:calc(112px + env(safe-area-inset-bottom,0px))}
+
+ html{scroll-padding-bottom:100px}
+
+}
+
+@media(max-width:360px){.mobile-glass-nav{width:calc(100% - 20px);
+  gap:1px;
+  padding:6px}
+.mobile-glass-nav a{font-size:10px;
+  padding:0 1px}
+}
+
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){.mobile-glass-nav{background:#263344}
+}
+
+@media(prefers-reduced-motion:reduce){.mobile-glass-nav a{transition:none}
+}
+
+
+.header-socials{display:flex;
+  align-items:center;
+  gap:4px}
+.header-socials :is(a,span){display:flex;
+  align-items:center;
+  justify-content:center;
+  width:34px;
+  height:44px;
+  border-radius:50%;
+  color:var(--color-navy)}
+.header-socials svg{width:15px;
+  height:15px;
+  fill:currentColor}
+.header-socials a:hover{color:#96743a;
+  background:rgba(198,161,91,.10)}
+
+@media(max-width:1023px){.site-header-inner{gap:8px}
+.header-socials{gap:0}
+.header-socials :is(a,span){width:32px}
+.header-socials svg{width:14px;
+  height:14px}
+}
+
+@media(max-width:360px){.site-header-inner{gap:4px}
+.site-header-inner>a{font-size:22px;
+  gap:8px}
+.header-socials :is(a,span){width:28px}
+}
+

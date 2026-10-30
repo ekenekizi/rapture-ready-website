@@ -10,6 +10,7 @@ type ShareTeachingButtonProps = {
   excerpt: string;
   variant?: "link" | "button";
   label?: string;
+  contentKind?: "teaching" | "video";
 };
 
 export function ShareTeachingButton({
@@ -18,6 +19,7 @@ export function ShareTeachingButton({
   excerpt,
   variant = "link",
   label,
+  contentKind = "teaching",
 }: ShareTeachingButtonProps) {
   const [open, setOpen] = useState(false);
   const [url, setUrl] = useState("");
@@ -69,7 +71,7 @@ export function ShareTeachingButton({
       <button
         type="button"
         onClick={openShare}
-        aria-label={`Share teaching: ${title}`}
+        aria-label={`Share ${contentKind}: ${title}`}
         aria-haspopup="dialog"
         className={
           variant === "button"
@@ -77,7 +79,12 @@ export function ShareTeachingButton({
             : "inline-flex min-h-11 cursor-pointer items-center gap-2 border-b border-gold py-2 text-xs hover:text-gold"
         }
       >
-        {label ?? (variant === "button" ? "Share Teaching" : "Share")}{" "}
+        {label ??
+          (variant === "button"
+            ? contentKind === "video"
+              ? "Share Video"
+              : "Share Teaching"
+            : "Share")}{" "}
         <span aria-hidden="true">↗</span>
       </button>
       <SiteDialog
@@ -88,7 +95,7 @@ export function ShareTeachingButton({
       >
         <div className="flex items-center justify-between gap-5">
           <h2 id={headingId} className="font-serif text-3xl">
-            Share this teaching
+            Share this {contentKind === "video" ? "video teaching" : "teaching"}
           </h2>
           <button
             type="button"
@@ -119,7 +126,7 @@ export function ShareTeachingButton({
           ))}
         </div>
         <label className="mt-6 block text-[10px] text-muted">
-          Teaching link
+          {contentKind === "video" ? "Video teaching link" : "Teaching link"}
           <input
             ref={input}
             readOnly

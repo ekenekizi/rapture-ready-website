@@ -1,6 +1,6 @@
 "use client";
 
-export default function TeachingsError({ reset }: { reset: () => void }) {
+export default function TeachingsError({ retry }: { retry: () => void }) {
   return (
     <main id="main-content" className="mx-auto max-w-3xl px-6 py-20">
       <h1 className="font-serif text-4xl">We couldn’t load the teaching.</h1>
@@ -11,7 +11,7 @@ export default function TeachingsError({ reset }: { reset: () => void }) {
 
       <button
         type="button"
-        onClick={() => reset()}
+        onClick={retry}
         className="mt-7 rounded-sm bg-navy px-6 py-3 text-sm text-white"
       >
         Try Again

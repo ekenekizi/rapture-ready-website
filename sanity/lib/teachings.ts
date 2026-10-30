@@ -3,15 +3,22 @@ import "server-only";
 import { defineQuery } from "next-sanity";
 import { cacheLife, cacheTag } from "next/cache";
 import { sanityClient } from "@/sanity/lib/client";
+import { playableVideo, isVideoTeaching } from "@/lib/video-teachings";
 import type { TeachingSummary, PublishedTeaching } from "@/sanity/types";
 
 const teachingsQuery = defineQuery(`
   *[
     _type == "teaching" &&
+    coalesce(isVisible, true) == true &&
+    !(_id in path("drafts.**")) &&
+    coalesce(format, "written") in ["written", "video"] &&
+    ((format == "video" && defined(videoFile.asset->url) && videoFile.asset->mimeType == "video/mp4") || (coalesce(format, "written") == "written" && count(body) > 0)) &&
     defined(title) &&
     defined(slug.current)
   ] | order(publishedAt desc) {
     _id,
+    "format": coalesce(format, "written"), durationSeconds, videoLabel,
+    "video": videoFile { "url": asset->url, "mimeType": asset->mimeType },
     title,
     "slug": slug.current,
     "category": coalesce(category, "Biblical Teaching"),
@@ -27,9 +34,15 @@ const teachingsQuery = defineQuery(`
 const teachingQuery = defineQuery(`
   *[
     _type == "teaching" &&
+    coalesce(isVisible, true) == true &&
+    !(_id in path("drafts.**")) &&
+    coalesce(format, "written") in ["written", "video"] &&
+    ((format == "video" && defined(videoFile.asset->url) && videoFile.asset->mimeType == "video/mp4") || (coalesce(format, "written") == "written" && count(body) > 0)) &&
     slug.current == $slug
   ][0] {
     _id,
+    "format": coalesce(format, "written"), durationSeconds, videoLabel,
+    "video": videoFile { "url": asset->url, "mimeType": asset->mimeType },
     title,
     "slug": slug.current,
     "category": coalesce(category, "Biblical Teaching"),
@@ -39,6 +52,8 @@ const teachingQuery = defineQuery(`
     "author": coalesce(author, "Endtime Watch"),
     publishedAt,
     coverImage { ..., "dimensions": asset->metadata.dimensions },
+    scriptureQuote, reflectionPoints, captionsLanguage,
+    "captions": captionsFile { "url": asset->url },
     "body": coalesce(body[] {
       ...,
       _type == "teachingImage" => {
@@ -59,7 +74,8 @@ export async function getTeachings(): Promise<TeachingSummary[]> {
 
   cacheTag("teachings");
 
-  return sanityClient.fetch<TeachingSummary[]>(teachingsQuery);
+  const items = await sanityClient.fetch<TeachingSummary[]>(teachingsQuery);
+  return items.filter((item) => !isVideoTeaching(item) || playableVideo(item));
 }
 
 export async function getTeaching(
@@ -75,5 +91,9 @@ export async function getTeaching(
 
   cacheTag("teachings");
 
-  return sanityClient.fetch<PublishedTeaching | null>(teachingQuery, { slug });
+  const item = await sanityClient.fetch<PublishedTeaching | null>(
+    teachingQuery,
+    { slug },
+  );
+  return item && (!isVideoTeaching(item) || playableVideo(item)) ? item : null;
 }

@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import { navigation } from "@/lib/content";
+import { NavigationLink } from "@/components/navigation-link";
 
 export function MobileMenu() {
   const [open, setOpen] = useState(false);
@@ -67,14 +68,14 @@ export function MobileMenu() {
             className="absolute inset-x-0 top-full border-b border-border bg-ivory px-6 py-5 shadow-sm"
           >
             {navigation.map((item) => (
-              <Link
+              <NavigationLink
                 key={item.href}
                 href={item.href}
                 onClick={() => setOpen(false)}
-                className="block border-b border-border py-4 text-sm"
+                mobile
               >
                 {item.label}
-              </Link>
+              </NavigationLink>
             ))}
 
             <Link

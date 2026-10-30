@@ -1,11 +1,16 @@
+import { pageMetadata } from "@/lib/seo";
 import Image from "next/image";
 import type { Metadata } from "next";
 import { book } from "@/lib/content";
 import { Container, Eyebrow, TextLink } from "@/components/ui";
+import { ShareBookButton } from "@/components/share-book-button";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "The Trumpet Is Blowing",
-};
+  description:
+    "Be Rapture Ready. A call to watchfulness, biblical discernment, and spiritual readiness for the return of Jesus Christ. By Evangelist Edwin Nwachukwu.",
+  path: "/library/rapture-ready",
+});
 
 import { ContinueReadingLink } from "@/components/reader/continue-reading-link";
 import { readerBook, sectionSummaries } from "@/lib/books/rapture-ready";
@@ -45,11 +50,13 @@ export default function BookPage() {
               {book.chapters} chapters · Approximately {book.minutes} min read
             </p>
 
-            <div className="mt-8">
+            <div className="mt-8 flex flex-wrap items-start gap-4">
               <ContinueReadingLink
                 sections={sectionSummaries}
                 startSectionId={readerBook.startSectionId}
               />
+
+              <ShareBookButton />
             </div>
 
             <h2 className="mt-10 font-serif text-3xl">About this book</h2>

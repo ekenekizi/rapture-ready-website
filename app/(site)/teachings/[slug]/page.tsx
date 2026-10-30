@@ -1,6 +1,11 @@
 import { Suspense } from "react";
+import { pageMetadata } from "@/lib/seo";
+import { teachingImageUrl } from "@/sanity/lib/image";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { VideoTeachingContent } from "@/components/video-teaching-content";
+import { isVideoTeaching } from "@/lib/video-teachings";
+import { getTeachings } from "@/sanity/lib/teachings";
 import { getTeaching } from "@/sanity/lib/teachings";
 import { Container, Eyebrow, TextLink } from "@/components/ui";
 import { TeachingBody } from "@/components/teaching-body";
@@ -17,10 +22,25 @@ export async function generateMetadata({
   const { slug } = await params;
   const teaching = await getTeaching(slug);
 
-  return {
-    title: teaching?.title ?? "Teaching not found",
-    description: teaching?.excerpt,
-  };
+  if (!teaching) notFound();
+  const cover = teachingImageUrl(teaching.coverImage, 1200, 630);
+  const publishedTime = Number.isFinite(Date.parse(teaching.publishedAt))
+    ? new Date(teaching.publishedAt).toISOString()
+    : undefined;
+  return pageMetadata({
+    title: teaching.title,
+    description: teaching.excerpt,
+    path: `/teachings/${encodeURIComponent(teaching.slug)}`,
+    article: { publishedTime, authors: [teaching.author] },
+    image: cover
+      ? {
+          url: cover,
+          width: 1200,
+          height: 630,
+          alt: teaching.coverImage?.alt || teaching.title,
+        }
+      : undefined,
+  });
 }
 
 async function TeachingContent({ params }: TeachingPageProps) {
@@ -29,6 +49,13 @@ async function TeachingContent({ params }: TeachingPageProps) {
 
   if (!teaching) {
     notFound();
+  }
+
+  if (isVideoTeaching(teaching)) {
+    const related = (await getTeachings())
+      .filter((item) => isVideoTeaching(item) && item._id !== teaching._id)
+      .slice(0, 2);
+    return <VideoTeachingContent teaching={teaching} related={related} />;
   }
 
   const publicationDate = new Intl.DateTimeFormat("en", {

@@ -1,7 +1,11 @@
 import Link from "next/link";
 import { navigation } from "@/lib/content";
 import { Container, ButtonLink } from "@/components/ui";
-import { MobileMenu } from "@/components/mobile-menu";
+import { MobileBottomNav } from "@/components/mobile-bottom-nav";
+import { HeaderSocialLinks } from "@/components/header-social-links";
+import { getSiteSettings } from "@/sanity/lib/pages";
+import { getSocialProfiles } from "@/lib/social-profiles";
+import { NavigationLink } from "@/components/navigation-link";
 
 export function Wordmark() {
   return (
@@ -27,10 +31,12 @@ export function Wordmark() {
   );
 }
 
-export function SiteHeader() {
+export async function SiteHeader() {
+  const profiles = getSocialProfiles(await getSiteSettings());
   return (
-    <header className="sticky top-0 z-40 border-b border-border bg-ivory/95 backdrop-blur-sm">
-      <Container className="relative flex h-20 items-center justify-between gap-6">
+    <>
+    <header className="site-header sticky top-0 z-40 border-b border-border bg-ivory/95 backdrop-blur-sm">
+      <Container className="site-header-inner relative flex h-20 items-center justify-between gap-6">
         <Wordmark />
 
         <nav
@@ -38,22 +44,24 @@ export function SiteHeader() {
           className="hidden items-center gap-7 text-xs lg:flex"
         >
           {navigation.map((item) => (
-            <Link
+            <NavigationLink
               key={item.href}
               href={item.href}
-              className="py-3 transition-colors hover:text-gold"
             >
               {item.label}
-            </Link>
+            </NavigationLink>
           ))}
         </nav>
 
-        <div className="hidden lg:block">
-          <ButtonLink href="/library">Explore Library</ButtonLink>
+        <div className="flex items-center gap-4">
+          <HeaderSocialLinks profiles={profiles} />
+          <div className="hidden lg:block">
+            <ButtonLink href="/library">Explore Library</ButtonLink>
+          </div>
         </div>
-
-        <MobileMenu />
       </Container>
     </header>
+    <MobileBottomNav />
+    </>
   );
 }

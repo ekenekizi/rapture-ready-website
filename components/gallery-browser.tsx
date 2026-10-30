@@ -1,8 +1,10 @@
 "use client";
-
-import { useId, useState } from "react";
-import Image from "next/image";
+import { useCallback, useId, useState, useSyncExternalStore } from "react";
 import { SiteDialog } from "@/components/site-dialog";
+import { ContentEmpty } from "@/components/content-empty";
+import { GalleryStudyCard } from "@/components/gallery-study-card";
+import { GalleryStudyImage } from "@/components/gallery-study-image";
+import { ShareGalleryStudyButton } from "@/components/share-gallery-study-button";
 import {
   galleryCategories,
   filterGallery,
@@ -10,177 +12,258 @@ import {
   type GalleryPhoto,
 } from "@/lib/gallery";
 
+function subscribeHash(listener: () => void) {
+  window.addEventListener("hashchange", listener);
+  return () => window.removeEventListener("hashchange", listener);
+}
+function currentStudy() {
+  return new URLSearchParams(window.location.hash.slice(1)).get("study") || "";
+}
+function setStudy(slug: string) {
+  // Replace the fragment without scrolling or creating a history entry per study.
+  const url = new URL(window.location.href);
+  url.hash = slug ? `study=${encodeURIComponent(slug)}` : "";
+  window.history.replaceState(null, "", url);
+  window.dispatchEvent(new HashChangeEvent("hashchange"));
+}
 export function GalleryBrowser({ photos }: { photos: GalleryPhoto[] }) {
-  const [category, setCategory] = useState<GalleryCategory>("All photos");
-  const [activeId, setActiveId] = useState<number | null>(null);
-  const headingId = useId();
+  const [category, setCategory] = useState<GalleryCategory>("All studies");
+  const slug = useSyncExternalStore(subscribeHash, currentStudy, () => "");
+  const active = photos.find((photo) => photo.slug === slug);
   const filtered = filterGallery(photos, category);
-  const activeIndex = filtered.findIndex((photo) => photo.id === activeId);
-  const active = filtered[activeIndex];
-
+  const headingId = useId();
+  const closeStudy = useCallback(() => setStudy(""), []);
+  const sequence =
+    active && !filtered.some((photo) => photo.id === active.id)
+      ? photos
+      : filtered;
+  const activeIndex = sequence.findIndex((photo) => photo.id === active?.id);
   function step(direction: number) {
-    if (!filtered.length) return;
-    const index = (activeIndex + direction + filtered.length) % filtered.length;
-    setActiveId(filtered[index].id);
+    if (!sequence.length) return;
+    setStudy(
+      sequence[(activeIndex + direction + sequence.length) % sequence.length]
+        .slug,
+    );
   }
-
   return (
     <>
-      <div className="flex flex-col justify-between gap-4 border-t border-border pt-6 pb-4 md:flex-row md:items-center">
+      <div className="gallery-collection-head">
         <div
+          className="gallery-filters"
           role="group"
-          aria-label="Filter gallery"
-          className="flex gap-2 overflow-x-auto pb-2"
+          aria-label="Filter photo studies"
         >
           {galleryCategories.map((item) => (
             <button
               key={item}
               type="button"
               aria-pressed={category === item}
-              onClick={() => {
-                setCategory(item);
-                setActiveId(null);
-              }}
-              className={`min-h-11 shrink-0 rounded-sm border px-4 py-2 text-[11px] transition-colors ${category === item ? "border-navy bg-navy text-white" : "border-border hover:border-gold"}`}
+              className={`chip ${category === item ? "active" : ""}`}
+              onClick={() => setCategory(item)}
             >
               {item}
             </button>
           ))}
         </div>
-        <p
-          role="status"
-          aria-live="polite"
-          className="shrink-0 text-[10px] text-muted"
-        >
-          {filtered.length} photograph{filtered.length === 1 ? "" : "s"}
+        <p role="status" aria-live="polite">
+          {filtered.length} photo {filtered.length === 1 ? "study" : "studies"}
         </p>
       </div>
-
-      {photos.some((photo) => photo.isSample) && (
-        <p className="mb-7 text-[9px] leading-5 text-muted">
-          DESIGN PREVIEW · Sample photography illustrates the layout. These are
-          not photographs of Endtime Watch activities.
+      <div className="prophecy-context-note">
+        <span aria-hidden="true">ⓘ</span>
+        <p>
+          <strong>A note on context.</strong> These visual studies present the
+          ministry’s biblical interpretation. Read each image’s source and
+          context notes; a photograph alone does not establish a fulfilled
+          prophecy.
+        </p>
+      </div>
+      {slug && !active && (
+        <p className="mb-6 text-sm text-muted" role="status">
+          This study is unavailable or is no longer published. You can explore
+          the collection below.
         </p>
       )}
-
-      <div className="columns-2 gap-4 md:columns-3 md:gap-7">
+      <div className="prophecy-grid">
         {filtered.map((photo) => (
-          <figure
+          <GalleryStudyCard
             key={photo.id}
-            className="mb-8 inline-block w-full break-inside-avoid"
-          >
-            <button
-              type="button"
-              onClick={() => setActiveId(photo.id)}
-              aria-label={`View photo: ${photo.title}`}
-              className={`group relative block w-full cursor-zoom-in overflow-hidden bg-paper ${photo.portrait ? "aspect-[4/5]" : "aspect-[4/3]"}`}
-            >
-              <Image
-                src={photo.src}
-                alt={photo.alt}
-                fill
-                sizes="(max-width: 768px) 50vw, 33vw"
-                className="object-cover saturate-[.6] transition-transform duration-500 group-hover:scale-[1.035] motion-reduce:transform-none motion-reduce:transition-none"
-              />
-              <span
-                aria-hidden="true"
-                className="absolute right-3 bottom-3 grid h-8 w-8 place-items-center rounded-full bg-ivory text-lg text-navy"
-              >
-                ↗
-              </span>
-            </button>
-            <figcaption className="pt-4">
-              <p className="text-[8px] tracking-[.16em] text-gold uppercase">
-                {photo.category}
-              </p>
-              <h2 className="mt-2 font-serif text-2xl leading-tight md:text-[26px]">
-                {photo.title}
-              </h2>
-              {photo.isSample && (
-                <p className="mt-2 text-[9px] text-muted">Sample photograph</p>
-              )}
-            </figcaption>
-          </figure>
+            photo={photo}
+            number={photos.indexOf(photo) + 1}
+            onOpen={() => setStudy(photo.slug)}
+          />
         ))}
       </div>
-
       {!filtered.length && (
-        <p className="py-16 text-center text-sm text-muted">
-          Photographs will appear here as they are added.
-        </p>
+        <ContentEmpty
+          title={
+            photos.length
+              ? "No studies in this topic yet."
+              : "Photo studies are coming soon."
+          }
+          description={
+            photos.length
+              ? "Choose another topic to explore the collection."
+              : "New images, Scripture passages, and biblical reflections will appear here when published."
+          }
+        />
       )}
-
       <SiteDialog
         open={Boolean(active)}
-        onClose={() => setActiveId(null)}
+        onClose={closeStudy}
         labelledBy={headingId}
-        className="max-w-[1060px]"
-        onKeyDown={(event) => {
-          if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
-            event.preventDefault();
-            step(event.key === "ArrowLeft" ? -1 : 1);
-          }
-        }}
+        className="prophecy-study"
       >
         {active && (
           <>
-            <div className="mb-3 flex items-center justify-between gap-4">
-              <p className="text-[9px] tracking-wider text-muted uppercase">
-                {active.category} · {activeIndex + 1} / {filtered.length}
-              </p>
-              <button
-                type="button"
-                onClick={() => setActiveId(null)}
-                aria-label="Close photo viewer"
-                className="h-11 w-11 text-xl"
-              >
-                ×
-              </button>
-            </div>
-            <div className="relative h-[51dvh] bg-paper md:h-[62dvh]">
-              <Image
-                src={active.src}
-                alt={active.alt}
-                fill
-                loading="eager"
-                sizes="(max-width: 1100px) 100vw, 1000px"
-                className="object-contain"
-              />
-            </div>
-            <div className="mt-5 flex items-start justify-between gap-5">
-              <div>
-                <h2 id={headingId} className="font-serif text-3xl">
-                  {active.title}
-                </h2>
-                <p className="mt-2 max-w-2xl text-xs leading-6 text-muted">
-                  {active.description}
-                </p>
-                <a
-                  href={active.source}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-3 inline-block text-[9px] text-muted underline underline-offset-4"
+            <header className="prophecy-study-toolbar">
+              <span className="eyebrow">
+                PHOTO STUDY{" "}
+                {String(photos.indexOf(active) + 1).padStart(2, "0")} ·{" "}
+                {active.category}
+              </span>
+              <div className="prophecy-study-tools">
+                <ShareGalleryStudyButton
+                  title={active.title}
+                  slug={active.slug}
+                  excerpt={active.description}
+                  returnToStudy
+                />
+                <button
+                  type="button"
+                  className="h-11 w-11 shrink-0 text-xl"
+                  aria-label="Close photo study"
+                  onClick={closeStudy}
                 >
-                  {active.isSample ? "Sample photo" : "Photo"} · {active.credit}
-                </a>
+                  ×
+                </button>
               </div>
-              <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
-                <button
-                  type="button"
-                  aria-label="Previous photograph"
-                  onClick={() => step(-1)}
-                  className="h-11 w-11 border border-border"
-                >
-                  ←
-                </button>
-                <button
-                  type="button"
-                  aria-label="Next photograph"
-                  onClick={() => step(1)}
-                  className="h-11 w-11 border border-border"
-                >
-                  →
-                </button>
+            </header>
+            <div key={active.id} className="prophecy-study-layout">
+              <aside className="prophecy-study-visual">
+                <GalleryStudyImage photo={active} />
+                <p>
+                  {active.imageContext ||
+                    "Image context has not been provided yet."}
+                </p>
+                <p>
+                  {active.imageKind === "illustration"
+                    ? "Symbolic illustration / artwork"
+                    : active.imageKind === "photograph"
+                      ? "Photograph"
+                      : "Image origin not verified"}
+                  {active.credit ? ` · ${active.credit}` : ""}
+                  {active.source && (
+                    <>
+                      {" "}
+                      ·{" "}
+                      <a
+                        className="underline underline-offset-4"
+                        href={active.source}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        Original source ↗
+                      </a>
+                    </>
+                  )}
+                </p>
+                <div className="prophecy-study-meta">
+                  <span>
+                    {active.minutes
+                      ? `${active.minutes} MIN READ`
+                      : "PHOTO STUDY"}
+                  </span>
+                  <span>
+                    IMAGE {photos.indexOf(active) + 1} OF {photos.length}
+                  </span>
+                </div>
+              </aside>
+              <div className="prophecy-study-reading">
+                <div className="eyebrow gold">{active.category}</div>
+                <h2 id={headingId}>{active.title}</h2>
+                {active.description && (
+                  <p className="prophecy-study-deck">{active.description}</p>
+                )}
+                <section className="prophecy-scripture-first">
+                  <div className="eyebrow gold">
+                    01 / WHAT THE BIBLE SAYS FIRST
+                  </div>
+                  {active.scriptures.length ? (
+                    active.scriptures.map((verse, index) => (
+                      <blockquote key={index}>
+                        <p>“{verse.quotation}”</p>
+                        <cite>{verse.reference}</cite>
+                      </blockquote>
+                    ))
+                  ) : (
+                    <p className="mt-5 text-sm text-muted">
+                      Scripture passages for this study will be available soon.
+                    </p>
+                  )}
+                </section>
+                <section>
+                  <div className="eyebrow">02 / READING THE IMAGE</div>
+                  <h3>What is visible</h3>
+                  <p className="whitespace-pre-line">
+                    {active.observation ||
+                      "The image explanation will be available soon."}
+                  </p>
+                </section>
+                <section>
+                  <div className="eyebrow">03 / A BIBLICAL REFLECTION</div>
+                  <h3>{active.reflectionTitle || "Consider the Scriptures"}</h3>
+                  <p className="whitespace-pre-line">
+                    {active.reflection ||
+                      "The ministry’s reflection will be available soon."}
+                  </p>
+                </section>
+                <section className="prophecy-reflect">
+                  <div className="eyebrow gold">04 / REFLECT & RESPOND</div>
+                  <h3>Bring the study into prayer.</h3>
+                  {active.responses.length ? (
+                    <ul>
+                      {active.responses.map((response, index) => (
+                        <li key={index}>{response}</li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p>Reflection questions will be available soon.</p>
+                  )}
+                </section>
+                <p className="prophecy-interpretation">
+                  Theological commentary reflects the ministry’s perspective.
+                  Consider the full biblical context alongside each image’s
+                  provenance.
+                </p>
+                {sequence.length > 1 && (
+                  <div className="prophecy-study-bottom">
+                    <button
+                      type="button"
+                      className="textlink"
+                      onClick={(event) => {
+                        event.currentTarget
+                          .closest("dialog")
+                          ?.scrollTo({ top: 0 });
+                        step(-1);
+                      }}
+                    >
+                      ← Previous study
+                    </button>
+                    <button
+                      type="button"
+                      className="btn"
+                      onClick={(event) => {
+                        event.currentTarget
+                          .closest("dialog")
+                          ?.scrollTo({ top: 0 });
+                        step(1);
+                      }}
+                    >
+                      Next study →
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
           </>

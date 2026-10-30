@@ -22,7 +22,7 @@ export const teachingImageType = defineType({
       title: "Caption",
       type: "string",
       description:
-        "Optional text displayed below the photo on the teaching page.",
+        "Optional text displayed below the photo on teaching or gallery pages.",
       validation: (rule) => rule.max(300),
     }),
     defineField({

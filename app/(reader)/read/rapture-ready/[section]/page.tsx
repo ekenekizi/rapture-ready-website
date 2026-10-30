@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import { notFound } from "next/navigation";
 import { readerBook, sectionSummaries } from "@/lib/books/rapture-ready";
 import { BookReader } from "@/components/reader/book-reader";
@@ -21,11 +22,12 @@ export async function generateMetadata({
 
   const section = readerBook.sections.find((item) => item.id === id);
 
-  return {
-    title: section
-      ? `${section.title} — ${readerBook.title}`
-      : "Section not found",
-  };
+  if (!section) notFound();
+  return pageMetadata({
+    title: `${section.title} — ${readerBook.title}`,
+    description: `Read ${section.title} in ${readerBook.title} — ${readerBook.subtitle}, by ${readerBook.author}.`,
+    path: `/read/rapture-ready/${encodeURIComponent(section.id)}`,
+  });
 }
 
 export default async function ReaderPage({ params }: ReaderPageProps) {

@@ -12,4 +12,8 @@ export type TeachingBodyBlock = PortableTextBlock | TeachingImage;
 
 export type PublishedTeaching = TeachingSummary & {
   body: TeachingBodyBlock[];
+  scriptureQuote?: string | null;
+  reflectionPoints?: string[] | null;
+  captions?: { url?: string | null } | null;
+  captionsLanguage?: string | null;
 };

@@ -40,7 +40,7 @@ export function ContinueReadingLink({
         href={`/read/rapture-ready/${sectionId}`}
         className="inline-flex min-h-12 items-center justify-center gap-5 rounded-sm bg-navy px-6 py-3 text-xs text-white hover:bg-navy-soft"
       >
-        {previous ? "Continue Reading" : "Read Online"}
+        {previous ? "Continue Reading" : "Start Reading"}
         <span aria-hidden="true">→</span>
       </Link>
 

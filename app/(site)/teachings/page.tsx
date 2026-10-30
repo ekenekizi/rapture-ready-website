@@ -1,41 +1,48 @@
+import { Suspense } from "react";
 import type { Metadata } from "next";
-import { Container, SectionHeading } from "@/components/ui";
-import { TeachingCard } from "@/components/teaching-card";
+import { pageMetadata } from "@/lib/seo";
 import { getTeachings } from "@/sanity/lib/teachings";
-
-export const metadata: Metadata = {
+import { TeachingBrowser } from "@/components/teaching-browser";
+export const metadata: Metadata = pageMetadata({
   title: "Teachings",
-};
-
+  description:
+    "Read written teachings and watch short biblical videos on the Rapture, Christian living, prophecy, and spiritual discernment from Endtime Watch.",
+  path: "/teachings",
+});
 export default async function TeachingsPage() {
   const teachings = await getTeachings();
-
   return (
-    <main id="main-content">
-      <Container className="py-16 md:py-24">
-        <SectionHeading
-          as="h1"
-          eyebrow="Biblical perspectives"
-          title="Understand the Times"
-          description="Read, reflect, and grow in biblical discernment through Scripture-centered teachings."
-        />
-
-        {teachings.length > 0 ? (
-          <div className="mt-12 grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
-            {teachings.map((teaching) => (
-              <TeachingCard key={teaching._id} teaching={teaching} />
-            ))}
+    <main id="main-content" className="teaching-hub video-surface">
+      <div className="video-wrap">
+        <header className="teaching-hub-hero">
+          <div className="eyebrow gold">
+            BIBLICAL PERSPECTIVES · WRITTEN & VIDEO TEACHINGS
           </div>
-        ) : (
-          <div className="mt-12 border-t border-border pt-8">
-            <p className="font-serif text-3xl">Teachings are being prepared.</p>
-
-            <p className="mt-4 text-sm leading-7 text-muted">
-              Published biblical teachings will appear here.
+          <h1>Understand the Times</h1>
+          <p>
+            Read with intention. Watch with understanding. <br />
+            Biblical teaching for a discerning heart and a life of faithful
+            readiness.
+          </p>
+        </header>
+        <Suspense
+          fallback={
+            <p role="status" className="py-8 text-sm text-muted">
+              Loading teachings…
             </p>
-          </div>
-        )}
-      </Container>
+          }
+        >
+          <TeachingBrowser teachings={teachings} />
+        </Suspense>
+        <section className="video-quiet-quote">
+          <blockquote>
+            “Thy word is a lamp unto my feet,
+            <br />
+            and a light unto my path.”
+          </blockquote>
+          <cite>PSALM 119:105</cite>
+        </section>
+      </div>
     </main>
   );
 }

@@ -44,8 +44,14 @@ export function SiteDialog({
     <dialog
       ref={ref}
       aria-labelledby={labelledBy}
-      onCancel={onClose}
-      onClose={onClose}
+      onCancel={(event) => {
+        // Keep nested share-dialog events from dismissing the study beneath it.
+        event.stopPropagation();
+        onClose();
+      }}
+      onClose={(event) => {
+        if (event.target === event.currentTarget) onClose();
+      }}
       onKeyDown={onKeyDown}
       onClick={(event) => {
         if (event.target !== event.currentTarget) return;

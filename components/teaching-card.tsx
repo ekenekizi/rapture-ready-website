@@ -14,9 +14,9 @@ export function TeachingCard({ teaching, compact = false }: TeachingCardProps) {
   const hasPhoto = Boolean(teaching.coverImage?.asset?._ref);
 
   return (
-    <Reveal className="h-full">
+    <Reveal className={compact ? "min-w-0" : "h-full"}>
       <article
-        className={`h-full border-t border-border pt-6 ${compact && hasPhoto ? "grid grid-cols-[94px_minmax(0,1fr)] gap-5 md:grid-cols-[125px_minmax(0,1fr)]" : ""}`}
+        className={`${compact ? "" : "h-full"} border-t border-border pt-6 ${compact && hasPhoto ? "grid grid-cols-[94px_minmax(0,1fr)] gap-5 md:grid-cols-[125px_minmax(0,1fr)]" : ""}`}
       >
         {hasPhoto && (
           <Link
