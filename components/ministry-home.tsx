@@ -77,23 +77,25 @@ export function HomeIntroduction({
                 className="mx-auto w-full max-w-md lg:max-w-lg"
               >
                 <figure>
-                  <Image
-                    src={heroImage || "/images/watchtower.png"}
-                    alt={
-                      heroImage
-                        ? hero?.image?.alt || "Endtime Watch ministry"
-                        : "A watchman with a trumpet overlooking the dawn from a stone watchtower."
-                    }
-                    width={1122}
-                    height={1402}
-                    preload
-                    sizes="(max-width: 767px) 90vw, 45vw"
-                    className={
-                      heroImage
-                        ? "aspect-[4/5] h-auto w-full object-cover"
-                        : "h-auto w-full mix-blend-multiply"
-                    }
-                  />
+                  <div className="overflow-hidden rounded-lg">
+                    <Image
+                      src={heroImage || "/images/watchtower.png"}
+                      alt={
+                        heroImage
+                          ? hero?.image?.alt || "Endtime Watch ministry"
+                          : "A watchman with a trumpet overlooking the dawn from a stone watchtower."
+                      }
+                      width={1122}
+                      height={1402}
+                      preload
+                      sizes="(max-width: 767px) 90vw, 45vw"
+                      className={
+                        heroImage
+                          ? "aspect-[4/5] h-auto w-full object-cover"
+                          : "h-auto w-full mix-blend-multiply"
+                      }
+                    />
+                  </div>
                   {(hero.imageCaption || hero.image?.caption) && (
                     <figcaption className="mt-4 text-center text-[8px] tracking-[.2em] text-muted">
                       {hero.imageCaption || hero.image?.caption}

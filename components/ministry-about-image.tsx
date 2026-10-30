@@ -11,12 +11,14 @@ export function MinistryAboutImage({
   if (src) {
     return (
       <figure>
-        <div className="mx-auto w-full max-w-[420px]">
+        <div className="mx-auto w-full max-w-[420px] overflow-hidden rounded-lg">
           <Image
             src={src}
             alt={image?.alt || "Endtime Watch ministry"}
             width={1400}
-            height={Math.round(1400 / (image ? teachingImageAspectRatio(image) : 1))}
+            height={Math.round(
+              1400 / (image ? teachingImageAspectRatio(image) : 1),
+            )}
             sizes="(max-width: 480px) 90vw, 420px"
             className="h-auto w-full object-contain"
           />
@@ -30,7 +32,7 @@ export function MinistryAboutImage({
     );
   }
   return (
-    <figure className="relative flex h-[260px] items-center justify-center overflow-hidden bg-[#dcd8cc] md:h-[350px]">
+    <figure className="relative flex h-[260px] items-center justify-center overflow-hidden rounded-lg bg-[#dcd8cc] md:h-[350px]">
       <svg
         viewBox="0 0 300 180"
         fill="none"
@@ -48,4 +50,3 @@ export function MinistryAboutImage({
     </figure>
   );
 }
-
