@@ -39,3 +39,4 @@ export async function getGalleryPhotos(): Promise<GalleryPhoto[]> {
     .map(toGalleryPhoto)
     .filter((photo): photo is GalleryPhoto => photo !== null);
 }
+

@@ -39,5 +39,5 @@ export function filterGallery(
     : photos.filter((photo) => photo.category === category);
 }
 export function galleryStudyPath(slug: string) {
-  return `/gallery#study=${encodeURIComponent(slug)}`;
+  return `/gallery/${encodeURIComponent(slug)}`;
 }

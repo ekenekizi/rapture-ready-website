@@ -2,6 +2,7 @@
 
 import { useId, useRef, useState } from "react";
 import { SiteDialog } from "@/components/site-dialog";
+import { galleryStudyPath } from "@/lib/gallery";
 import { teachingShareLinks } from "@/lib/share";
 
 type ShareGalleryStudyButtonProps = {
@@ -30,12 +31,7 @@ export function ShareGalleryStudyButton({
   const headingId = useId();
 
   function openShare() {
-    setUrl(
-      new URL(
-        `/gallery#study=${encodeURIComponent(slug)}`,
-        window.location.origin,
-      ).href,
-    );
+    setUrl(new URL(galleryStudyPath(slug), window.location.origin).href);
     setLocal(
       ["localhost", "127.0.0.1", "[::1]"].includes(window.location.hostname),
     );

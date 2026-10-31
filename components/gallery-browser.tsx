@@ -3,7 +3,7 @@ import { useCallback, useId, useState, useSyncExternalStore } from "react";
 import { SiteDialog } from "@/components/site-dialog";
 import { ContentEmpty } from "@/components/content-empty";
 import { GalleryStudyCard } from "@/components/gallery-study-card";
-import { GalleryStudyImage } from "@/components/gallery-study-image";
+import { GalleryStudyContent } from "@/components/gallery-study-content";
 import { ShareGalleryStudyButton } from "@/components/share-gallery-study-button";
 import {
   galleryCategories,
@@ -139,133 +139,45 @@ export function GalleryBrowser({ photos }: { photos: GalleryPhoto[] }) {
                 </button>
               </div>
             </header>
-            <div key={active.id} className="prophecy-study-layout">
-              <aside className="prophecy-study-visual">
-                <GalleryStudyImage photo={active} />
-                <p>
-                  {active.imageContext ||
-                    "Image context has not been provided yet."}
-                </p>
-                <p>
-                  {active.imageKind === "illustration"
-                    ? "Symbolic illustration / artwork"
-                    : active.imageKind === "photograph"
-                      ? "Photograph"
-                      : "Image origin not verified"}
-                  {active.credit ? ` · ${active.credit}` : ""}
-                  {active.source && (
-                    <>
-                      {" "}
-                      ·{" "}
-                      <a
-                        className="underline underline-offset-4"
-                        href={active.source}
-                        target="_blank"
-                        rel="noopener noreferrer"
+            <GalleryStudyContent
+              key={active.id}
+              photo={active}
+              number={photos.indexOf(active) + 1}
+              total={photos.length}
+              headingId={headingId}
+              footer={
+                <>
+                  {sequence.length > 1 && (
+                    <div className="prophecy-study-bottom">
+                      <button
+                        type="button"
+                        className="textlink"
+                        onClick={(event) => {
+                          event.currentTarget
+                            .closest("dialog")
+                            ?.scrollTo({ top: 0 });
+                          step(-1);
+                        }}
                       >
-                        Original source ↗
-                      </a>
-                    </>
+                        ← Previous study
+                      </button>
+                      <button
+                        type="button"
+                        className="btn"
+                        onClick={(event) => {
+                          event.currentTarget
+                            .closest("dialog")
+                            ?.scrollTo({ top: 0 });
+                          step(1);
+                        }}
+                      >
+                        Next study →
+                      </button>
+                    </div>
                   )}
-                </p>
-                <div className="prophecy-study-meta">
-                  <span>
-                    {active.minutes
-                      ? `${active.minutes} MIN READ`
-                      : "PHOTO STUDY"}
-                  </span>
-                  <span>
-                    IMAGE {photos.indexOf(active) + 1} OF {photos.length}
-                  </span>
-                </div>
-              </aside>
-              <div className="prophecy-study-reading">
-                <div className="eyebrow gold">{active.category}</div>
-                <h2 id={headingId}>{active.title}</h2>
-                {active.description && (
-                  <p className="prophecy-study-deck">{active.description}</p>
-                )}
-                <section className="prophecy-scripture-first">
-                  <div className="eyebrow gold">
-                    01 / WHAT THE BIBLE SAYS FIRST
-                  </div>
-                  {active.scriptures.length ? (
-                    active.scriptures.map((verse, index) => (
-                      <blockquote key={index}>
-                        <p>“{verse.quotation}”</p>
-                        <cite>{verse.reference}</cite>
-                      </blockquote>
-                    ))
-                  ) : (
-                    <p className="mt-5 text-sm text-muted">
-                      Scripture passages for this study will be available soon.
-                    </p>
-                  )}
-                </section>
-                <section>
-                  <div className="eyebrow">02 / READING THE IMAGE</div>
-                  <h3>What is visible</h3>
-                  <p className="whitespace-pre-line">
-                    {active.observation ||
-                      "The image explanation will be available soon."}
-                  </p>
-                </section>
-                <section>
-                  <div className="eyebrow">03 / A BIBLICAL REFLECTION</div>
-                  <h3>{active.reflectionTitle || "Consider the Scriptures"}</h3>
-                  <p className="whitespace-pre-line">
-                    {active.reflection ||
-                      "The ministry’s reflection will be available soon."}
-                  </p>
-                </section>
-                <section className="prophecy-reflect">
-                  <div className="eyebrow gold">04 / REFLECT & RESPOND</div>
-                  <h3>Bring the study into prayer.</h3>
-                  {active.responses.length ? (
-                    <ul>
-                      {active.responses.map((response, index) => (
-                        <li key={index}>{response}</li>
-                      ))}
-                    </ul>
-                  ) : (
-                    <p>Reflection questions will be available soon.</p>
-                  )}
-                </section>
-                <p className="prophecy-interpretation">
-                  Theological commentary reflects the ministry’s perspective.
-                  Consider the full biblical context alongside each image’s
-                  provenance.
-                </p>
-                {sequence.length > 1 && (
-                  <div className="prophecy-study-bottom">
-                    <button
-                      type="button"
-                      className="textlink"
-                      onClick={(event) => {
-                        event.currentTarget
-                          .closest("dialog")
-                          ?.scrollTo({ top: 0 });
-                        step(-1);
-                      }}
-                    >
-                      ← Previous study
-                    </button>
-                    <button
-                      type="button"
-                      className="btn"
-                      onClick={(event) => {
-                        event.currentTarget
-                          .closest("dialog")
-                          ?.scrollTo({ top: 0 });
-                        step(1);
-                      }}
-                    >
-                      Next study →
-                    </button>
-                  </div>
-                )}
-              </div>
-            </div>
+                </>
+              }
+            />
           </>
         )}
       </SiteDialog>

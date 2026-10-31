@@ -90,3 +90,9 @@ visit or reload after delivery uses fresh content. Already open tabs need a relo
 - The ebook text remains local; reading progress and highlights remain in the browser.
 - No Join Us form is included.
 - Public reads do not require an API write token. Studio controls content editing.
+
+## Sharing gallery studies
+
+Each study has a shareable /gallery/SLUG page with its published Sanity title, description, and uploaded image in Open Graph and X metadata. Gallery cards and share buttons use these URLs; existing /gallery#study=SLUG links still open the original modal. The shared page and the modal use the same study content.
+
+The Title field controls both the study heading and share title. Change placeholder titles in Studio and publish; changing the title does not require changing the slug. Social platforms cache previews, so previously sent messages may keep their old previews after publication or deployment. Share the new study URL to test.

@@ -339,7 +339,7 @@
 .prophecy-study-reading {
   padding: 40px 44px 44px;
 }
-.prophecy-study-reading > h2 {
+.prophecy-study-reading > :is(h1, h2) {
   font-size: 49px;
   line-height: 1.08;
   margin: 16px 0;
@@ -615,7 +615,7 @@
   .prophecy-study-reading {
     padding: 30px 22px 40px;
   }
-  .prophecy-study-reading > h2 {
+  .prophecy-study-reading > :is(h1, h2) {
     font-size: 43px;
   }
   .prophecy-study-reading section > p,
